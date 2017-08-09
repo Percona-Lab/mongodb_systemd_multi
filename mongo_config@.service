@@ -1,0 +1,40 @@
+
+[Unit]
+Description=High-performance, schema-free document-oriented database listening on %I : Config Server
+After=network.target
+Requires=mongod.service
+Before=mongod.service
+BindsTo=mongod.service
+Documentation=https://docs.mongodb.org/manual
+
+[Service]
+User=mongod
+Group=mongod
+Environment="OPTIONS=-f /etc/mongod.d/config-%I.conf"
+Environment="CPUS_ALLOWED=''"
+EnvironmentFile=-/etc/mongod.d/config-%I.env
+CPUAffinity=$CPUS_ALLOWED
+ExecStart=/usr/bin/mongod $OPTIONS
+ExecStartPre=/opt/percona/mongod_multi/helpers/setup_user_and_group.sh
+ExecStartPre=/opt/percona/mongod_multi/helpers/make_run_dir.sh
+ExecStartPre=/opt/percona/mongod_multi/helpers/mongod_enviroment_helper.sh config-%I
+
+PermissionsStartOnly=true
+PIDFile=/var/run/mongodb/config-%I.pid
+
+#Ulimit Tweaks for Mongo
+LimitFSIZE=infinity
+LimitCPU=infinity
+LimitAS=infinity
+LimitNOFILE=64000
+LimitNPROC=64000
+TasksMax=infinity
+TasksAccounting=false
+
+#How to handle crashes
+Restart=always
+RestartSec=3
+
+
+[Install]
+WantedBy=mongod.service

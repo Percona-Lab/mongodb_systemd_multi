@@ -1,0 +1,9 @@
+[Unit]
+    Description=Start all mongod instances
+[Service]
+    Type=oneshot
+    ExecStart=/bin/true
+    RemainAfterExit=yes
+
+[Install]
+    WantedBy=multi-user.target
