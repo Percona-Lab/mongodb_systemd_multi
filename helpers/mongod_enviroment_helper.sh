@@ -6,7 +6,7 @@ ENVFILE="/etc/mongod.d/${1}.env"
 
 #Create ENVFILE if missing
 if [ ! -f ${ENVFILE} ];then
-	toch  ${ENVFILE}
+	touch  ${ENVFILE}
 fi
 
 
